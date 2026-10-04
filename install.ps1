@@ -58,7 +58,7 @@ php artisan key:generate --force
 Write-Host "[INFO] Running database migrations..." -ForegroundColor Cyan
 try {
     php artisan migrate --force
-    php artisan db:seed --class=DatabaseProductSeeder --force
+    php artisan db:seed --force
 } catch {
     Write-Host "[WARNING] Ensure MySQL (Laragon/XAMPP) is running on port 3306." -ForegroundColor Yellow
 }

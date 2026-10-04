@@ -272,7 +272,7 @@ print_info "Running database migrations..."
 php artisan migrate --force
 
 print_info "Seeding base database engines..."
-php artisan db:seed --class=DatabaseProductSeeder --force 2>/dev/null || php artisan db:seed --force
+php artisan db:seed --force
 
 print_info "Creating Administrator Account (${ADMIN_USER})..."
 php artisan panel:admin "${ADMIN_EMAIL}" "${ADMIN_USER}" "${ADMIN_PASS}" "Administrator"
