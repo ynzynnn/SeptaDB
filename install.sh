@@ -143,6 +143,19 @@ if [ -d "/etc/systemd/system/php8.3-fpm.service.d" ]; then
     systemctl daemon-reload || true
 fi
 
+# Fix broken or orphaned third-party pool configs in /etc/php/8.3/fpm/pool.d
+if [ -d "/etc/php/8.3/fpm/pool.d" ]; then
+    mkdir -p /etc/php/8.3/fpm/pool.d/backup_orphans
+    for pool in /etc/php/8.3/fpm/pool.d/*.conf; do
+        if [ -f "$pool" ] && [ "$(basename "$pool")" != "www.conf" ]; then
+            CHDIR_PATH=$(grep -E '^\s*chdir\s*=' "$pool" | awk -F'=' '{print $2}' | tr -d ' ' || true)
+            if [ -n "$CHDIR_PATH" ] && [ ! -d "$CHDIR_PATH" ]; then
+                mkdir -p "$CHDIR_PATH" 2>/dev/null || mv "$pool" /etc/php/8.3/fpm/pool.d/backup_orphans/
+            fi
+        fi
+    done
+fi
+
 # Install PHP 8.3 & Modules
 print_info "Installing PHP 8.3-FPM and required extensions..."
 dpkg --configure -a || true
