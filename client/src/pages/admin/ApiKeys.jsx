@@ -174,6 +174,162 @@ export const AdminApiKeys = () => {
         )}
       </div>
 
+      {/* Interactive REST API Documentation */}
+      <div className="card" style={{ marginTop: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div>
+            <h3 style={{ fontSize: '16px', fontWeight: 600 }}>REST API Endpoints Documentation</h3>
+            <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+              Use these endpoints for Paymenter, WHMCS, or automated provisioning integrations.
+            </p>
+          </div>
+          <span className="badge badge-neutral" style={{ fontSize: '11px' }}>
+            Base URL: {window.location.origin}/api
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          {/* Endpoint 1: Provision */}
+          <div style={{ border: '1px solid var(--border-color)', borderRadius: '6px', padding: '14px', background: 'var(--bg-card)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span className="badge badge-success" style={{ fontWeight: 700, fontSize: '11px' }}>POST</span>
+              <code style={{ fontSize: '13px', fontWeight: 600 }}>/api/external/provision</code>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>— Create & Provision Database</span>
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Creates a new database and user credentials. Automatically creates panel user if email is new.
+            </p>
+            <div className="mono-box" style={{ padding: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <pre style={{ margin: 0, overflowX: 'auto', color: 'var(--text-main)' }}>
+{`curl -X POST "${window.location.origin}/api/external/provision" \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-KEY: sk_live_your_token_here" \\
+  -d '{
+    "email": "customer@client.com",
+    "name": "Budi Santoso",
+    "external_id": "PAY-SERVICE-10293",
+    "product_type": "mysql",
+    "database_name": "app_db"
+  }'`}
+              </pre>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => copyToClipboard(`curl -X POST "${window.location.origin}/api/external/provision" -H "Content-Type: application/json" -H "X-API-KEY: sk_live_your_token_here" -d '{"email":"customer@client.com","name":"Budi Santoso","external_id":"PAY-SERVICE-10293","product_type":"mysql","database_name":"app_db"}'`)}
+                title="Copy cURL"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Endpoint 2: Suspend */}
+          <div style={{ border: '1px solid var(--border-color)', borderRadius: '6px', padding: '14px', background: 'var(--bg-card)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span className="badge badge-warning" style={{ fontWeight: 700, fontSize: '11px' }}>POST</span>
+              <code style={{ fontSize: '13px', fontWeight: 600 }}>/api/external/suspend</code>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>— Suspend Access (Overdue Invoice)</span>
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Revokes database user login rights temporarily without deleting any data.
+            </p>
+            <div className="mono-box" style={{ padding: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <pre style={{ margin: 0, overflowX: 'auto', color: 'var(--text-main)' }}>
+{`curl -X POST "${window.location.origin}/api/external/suspend" \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-KEY: sk_live_your_token_here" \\
+  -d '{"identifier": "PAY-SERVICE-10293"}'`}
+              </pre>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => copyToClipboard(`curl -X POST "${window.location.origin}/api/external/suspend" -H "Content-Type: application/json" -H "X-API-KEY: sk_live_your_token_here" -d '{"identifier":"PAY-SERVICE-10293"}'`)}
+                title="Copy cURL"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Endpoint 3: Unsuspend */}
+          <div style={{ border: '1px solid var(--border-color)', borderRadius: '6px', padding: '14px', background: 'var(--bg-card)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span className="badge badge-success" style={{ fontWeight: 700, fontSize: '11px' }}>POST</span>
+              <code style={{ fontSize: '13px', fontWeight: 600 }}>/api/external/unsuspend</code>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>— Unsuspend Access (Invoice Paid)</span>
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Restores full database user privileges.
+            </p>
+            <div className="mono-box" style={{ padding: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <pre style={{ margin: 0, overflowX: 'auto', color: 'var(--text-main)' }}>
+{`curl -X POST "${window.location.origin}/api/external/unsuspend" \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-KEY: sk_live_your_token_here" \\
+  -d '{"identifier": "PAY-SERVICE-10293"}'`}
+              </pre>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => copyToClipboard(`curl -X POST "${window.location.origin}/api/external/unsuspend" -H "Content-Type: application/json" -H "X-API-KEY: sk_live_your_token_here" -d '{"identifier":"PAY-SERVICE-10293"}'`)}
+                title="Copy cURL"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Endpoint 4: Terminate */}
+          <div style={{ border: '1px solid var(--border-color)', borderRadius: '6px', padding: '14px', background: 'var(--bg-card)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span className="badge badge-danger" style={{ fontWeight: 700, fontSize: '11px' }}>POST</span>
+              <code style={{ fontSize: '13px', fontWeight: 600 }}>/api/external/terminate</code>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>— Terminate & Delete Database</span>
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Permanently drops database and removes user from MySQL / PostgreSQL server.
+            </p>
+            <div className="mono-box" style={{ padding: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <pre style={{ margin: 0, overflowX: 'auto', color: 'var(--text-main)' }}>
+{`curl -X POST "${window.location.origin}/api/external/terminate" \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-KEY: sk_live_your_token_here" \\
+  -d '{"identifier": "PAY-SERVICE-10293"}'`}
+              </pre>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => copyToClipboard(`curl -X POST "${window.location.origin}/api/external/terminate" -H "Content-Type: application/json" -H "X-API-KEY: sk_live_your_token_here" -d '{"identifier":"PAY-SERVICE-10293"}'`)}
+                title="Copy cURL"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+          </div>
+
+          {/* Endpoint 5: Status */}
+          <div style={{ border: '1px solid var(--border-color)', borderRadius: '6px', padding: '14px', background: 'var(--bg-card)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+              <span className="badge badge-neutral" style={{ fontWeight: 700, fontSize: '11px' }}>GET</span>
+              <code style={{ fontSize: '13px', fontWeight: 600 }}>/api/external/status/:identifier</code>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>— Get Connection & Status</span>
+            </div>
+            <p style={{ fontSize: '12.5px', color: 'var(--text-muted)', marginBottom: '10px' }}>
+              Returns database host, port, database name, username, password, and status.
+            </p>
+            <div className="mono-box" style={{ padding: '10px', fontSize: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <pre style={{ margin: 0, overflowX: 'auto', color: 'var(--text-main)' }}>
+{`curl -X GET "${window.location.origin}/api/external/status/PAY-SERVICE-10293" \\
+  -H "X-API-KEY: sk_live_your_token_here"`}
+              </pre>
+              <button
+                className="btn btn-secondary btn-sm"
+                onClick={() => copyToClipboard(`curl -X GET "${window.location.origin}/api/external/status/PAY-SERVICE-10293" -H "X-API-KEY: sk_live_your_token_here"`)}
+                title="Copy cURL"
+              >
+                <Copy size={13} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Generate Key Modal */}
       {createModal && (
         <div className="modal-overlay" onClick={() => setCreateModal(false)}>
