@@ -7,7 +7,6 @@ import Layout from './components/Layout';
 
 // Auth Pages
 import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
 
 // User Pages
 import UserDashboard from './pages/user/Dashboard';
@@ -55,7 +54,7 @@ export const App = () => {
         <Routes>
           {/* Public Authentication */}
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Navigate to="/login" replace />} />
 
           {/* User Protected Routes */}
           <Route element={<ProtectedRoute adminOnly={false} />}>

@@ -68,11 +68,11 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $allowReg = Setting::get('allow_registration', 'true');
-        if ($allowReg === 'false') {
+        $allowReg = Setting::get('allow_registration', 'false');
+        if ($allowReg !== 'true') {
             return response()->json([
                 'success' => false,
-                'message' => 'User registration is currently disabled by administrator.',
+                'message' => 'User registration is currently disabled.',
             ], 403);
         }
 

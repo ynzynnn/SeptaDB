@@ -154,7 +154,7 @@ class DatabaseSeeder extends Seeder
             'panel_currency' => 'IDR',
             'support_email' => 'support@septacloud.net',
             'maintenance_mode' => 'false',
-            'allow_registration' => 'true',
+            'allow_registration' => 'false',
             'auto_approve_orders' => 'true',
         ];
 

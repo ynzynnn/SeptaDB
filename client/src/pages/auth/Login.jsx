@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Database, Lock, User } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -82,13 +82,6 @@ export const Login = () => {
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
-
-        <div style={{ textAlign: 'center', marginTop: '22px', fontSize: '12.5px', color: 'var(--text-muted)' }}>
-          Don't have an account?{' '}
-          <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-            Create Account
-          </Link>
-        </div>
       </div>
     </div>
   );
