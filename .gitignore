@@ -1,0 +1,39 @@
+# Dependencies
+server/vendor/
+client/node_modules/
+
+# Environment configurations
+server/.env
+server/.env.backup
+server/.env.production
+client/.env
+client/.env.local
+client/.env.*.local
+!server/.env.example
+!client/.env.example
+
+# Build outputs
+client/dist/
+client/dist-ssr/
+server/public/build/
+server/public/hot/
+
+# Storage & Logs
+server/storage/logs/*.log
+server/storage/framework/cache/data/*
+server/storage/framework/sessions/*
+server/storage/framework/views/*
+!server/storage/framework/cache/data/.gitignore
+!server/storage/framework/sessions/.gitignore
+!server/storage/framework/views/.gitignore
+*.log
+
+# IDE & OS Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
