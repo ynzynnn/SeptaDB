@@ -135,8 +135,18 @@ elif grep -q "Debian" /etc/os-release; then
     apt update -y
 fi
 
+# Fix potential cloud template systemd mount namespacing issues (e.g., missing /var/www/vhosts)
+print_info "Ensuring system directories & systemd namespace compatibility..."
+mkdir -p /var/www/vhosts /var/www/html /var/www/nexusdb
+if [ -d "/etc/systemd/system/php8.3-fpm.service.d" ]; then
+    rm -rf /etc/systemd/system/php8.3-fpm.service.d
+    systemctl daemon-reload || true
+fi
+
 # Install PHP 8.3 & Modules
 print_info "Installing PHP 8.3-FPM and required extensions..."
+dpkg --configure -a || true
+apt --fix-broken install -y || true
 apt install -y php8.3 php8.3-fpm php8.3-mysql php8.3-mbstring php8.3-xml \
     php8.3-bcmath php8.3-curl php8.3-zip php8.3-intl php8.3-cli php8.3-sqlite3
 
