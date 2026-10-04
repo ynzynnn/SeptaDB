@@ -50,6 +50,11 @@ Untuk memperbarui panel di masa mendatang:
 sudo bash update.sh
 ```
 
+Untuk menghapus / uninstall panel dari VPS:
+```bash
+sudo bash uninstall.sh
+```
+
 ---
 
 ## 💻 Instalasi Lokal (Windows)

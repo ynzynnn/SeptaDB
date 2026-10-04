@@ -27,6 +27,12 @@ Kapan pun ada pembaruan kode, jalankan 1 perintah ini di VPS:
 sudo bash update.sh
 ```
 
+### Cara Menghapus / Uninstall Panel:
+Jika Anda ingin menghapus panel secara bersih dari VPS:
+```bash
+sudo bash uninstall.sh
+```
+
 ---
 
 ## 🛠️ METODE 2: Instalasi Manual Langkah Demi Langkah
