@@ -150,9 +150,9 @@ class DatabaseSeeder extends Seeder
 
         // 6. Settings
         $defaultSettings = [
-            'panel_name' => 'NexusDB Cloud',
+            'panel_name' => 'SeptaDB Cloud',
             'panel_currency' => 'IDR',
-            'support_email' => 'support@nexusdb.local',
+            'support_email' => 'support@septacloud.net',
             'maintenance_mode' => 'false',
             'allow_registration' => 'true',
             'auto_approve_orders' => 'true',

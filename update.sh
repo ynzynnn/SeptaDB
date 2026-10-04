@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-#  NexusDB - Updater Script
+#  SeptaDB - Updater Script
 #  Pulls latest code, updates dependencies, runs migrations, and rebuilds assets.
 # ==============================================================================
 
@@ -23,15 +23,16 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-INSTALL_DIR="/var/www/nexusdb"
-
-if [ ! -d "$INSTALL_DIR" ]; then
+INSTALL_DIR="/var/www/septadb"
+if [ ! -d "$INSTALL_DIR" ] && [ -d "/var/www/nexusdb" ]; then
+    INSTALL_DIR="/var/www/nexusdb"
+elif [ ! -d "$INSTALL_DIR" ]; then
     INSTALL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 fi
 
 cd "$INSTALL_DIR"
 
-print_info "Checking for Git updates..."
+print_info "Checking for Git updates in $INSTALL_DIR..."
 if [ -d ".git" ]; then
     git pull origin main || git pull || true
 fi
@@ -61,7 +62,8 @@ php artisan view:cache
 print_info "Restarting services..."
 systemctl restart php8.3-fpm
 systemctl reload nginx
+systemctl restart septadb-worker.service >/dev/null 2>&1 || true
 systemctl restart nexusdb-worker.service >/dev/null 2>&1 || true
 
 echo ""
-print_success "NexusDB Panel has been successfully updated to the latest version!"
+print_success "SeptaDB Panel has been successfully updated to the latest version!"

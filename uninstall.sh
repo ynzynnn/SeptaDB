@@ -34,10 +34,10 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 echo -e "${YELLOW}This script will remove:${NC}"
-echo " - Panel Application Files (/var/www/nexusdb)"
-echo " - Nginx Configuration (/etc/nginx/sites-enabled/nexusdb.conf)"
-echo " - Systemd Worker Service (nexusdb-worker.service)"
-echo " - Panel Database & User (nexusdb_panel, nexusdb_user) [Optional]"
+echo " - Panel Application Files (/var/www/septadb or /var/www/nexusdb)"
+echo " - Nginx Configuration (septadb.conf / nexusdb.conf)"
+echo " - Systemd Worker Service (septadb-worker / nexusdb-worker)"
+echo " - Panel Database & User (septadb_panel / nexusdb_panel) [Optional]"
 echo ""
 read -p "Are you sure you want to proceed with uninstallation? (y/N): " CONFIRM
 if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
@@ -46,24 +46,26 @@ if [[ ! "$CONFIRM" =~ ^[Yy]$ ]]; then
 fi
 
 echo ""
-read -p "Do you also want to delete the MySQL panel database (nexusdb_panel)? (y/N): " REMOVE_DB
+read -p "Do you also want to delete the MySQL panel database (septadb_panel / nexusdb_panel)? (y/N): " REMOVE_DB
 
 # 2. Stop and Remove Systemd Worker Service
 print_info "Stopping and removing background worker service..."
-if systemctl is-active --quiet nexusdb-worker.service 2>/dev/null; then
-    systemctl stop nexusdb-worker.service
-fi
-if [ -f "/etc/systemd/system/nexusdb-worker.service" ]; then
-    systemctl disable nexusdb-worker.service >/dev/null 2>&1 || true
-    rm -f /etc/systemd/system/nexusdb-worker.service
-    systemctl daemon-reload
-    print_success "Worker service removed."
-fi
+for srv in "septadb-worker.service" "nexusdb-worker.service"; do
+    if systemctl is-active --quiet "$srv" 2>/dev/null; then
+        systemctl stop "$srv"
+    fi
+    if [ -f "/etc/systemd/system/$srv" ]; then
+        systemctl disable "$srv" >/dev/null 2>&1 || true
+        rm -f "/etc/systemd/system/$srv"
+    fi
+done
+systemctl daemon-reload
+print_success "Worker service removed."
 
 # 3. Remove Nginx Configuration
 print_info "Removing Nginx virtual host configuration..."
-rm -f /etc/nginx/sites-enabled/nexusdb.conf
-rm -f /etc/nginx/sites-available/nexusdb.conf
+rm -f /etc/nginx/sites-enabled/septadb.conf /etc/nginx/sites-enabled/nexusdb.conf
+rm -f /etc/nginx/sites-available/septadb.conf /etc/nginx/sites-available/nexusdb.conf
 
 # Restore default nginx site if available and no other sites enabled
 if [ -f "/etc/nginx/sites-available/default" ] && [ -z "$(ls -A /etc/nginx/sites-enabled 2>/dev/null)" ]; then

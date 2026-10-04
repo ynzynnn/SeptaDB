@@ -32,7 +32,7 @@ export const Sidebar = () => {
           <Database size={16} />
         </div>
         <div>
-          <div className="brand-title">NexusDB</div>
+          <div className="brand-title">SeptaDB</div>
           <div className="brand-subtitle">Database Manager</div>
         </div>
       </div>

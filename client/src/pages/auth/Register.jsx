@@ -30,7 +30,7 @@ export const Register = () => {
     setLoading(true);
     try {
       await register(formData);
-      toast.success('Registration successful! Welcome to NexusDB.');
+      toast.success('Registration successful! Welcome to SeptaDB.');
       navigate('/user/dashboard');
     } catch (err) {
       const msg = err.response?.data?.message || Object.values(err.response?.data?.errors || {})?.[0]?.[0] || 'Registration failed.';
@@ -48,7 +48,7 @@ export const Register = () => {
             <Database size={24} />
           </div>
           <h1>Create Account</h1>
-          <p>Join NexusDB to manage and deploy cloud databases</p>
+          <p>Join SeptaDB to manage and deploy cloud databases</p>
         </div>
 
         <form onSubmit={handleSubmit}>

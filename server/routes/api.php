@@ -22,7 +22,7 @@ use App\Http\Controllers\External\PaymenterController;
 Route::get('/health', function () {
     return response()->json([
         'status' => 'online',
-        'panel' => 'NexusDB Management API',
+        'panel' => 'SeptaDB Management API',
         'timestamp' => now()->toIso8601String(),
     ]);
 });

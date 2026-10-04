@@ -15,7 +15,7 @@ export const ProtectedRoute = ({ adminOnly = false }) => {
         color: 'var(--text-muted)',
         backgroundColor: 'var(--bg-main)'
       }}>
-        Loading NexusDB...
+        Loading SeptaDB...
       </div>
     );
   }

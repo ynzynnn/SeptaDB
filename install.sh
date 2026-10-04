@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # ==============================================================================
-#  NexusDB - Automated Production VPS Installer
+#  SeptaDB - Automated Production VPS Installer
 #  Architecture: Ubuntu 22.04/24.04 & Debian 11/12
 #  Components: Nginx, MariaDB, PHP 8.3-FPM, Node.js 20, Composer, Certbot SSL
 # ==============================================================================
@@ -26,12 +26,12 @@ print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
 clear
 echo -e "${BOLD}"
 echo "===================================================================="
-echo "    _   __                     ____  ____                           "
-echo "   / | / /__  _  ____  _______/ __ \/ __ )                          "
-echo "  /  |/ / _ \| |/_/ / / / ___/ / / / __  |                          "
-echo " / /|  /  __/>  </ /_/ (__  ) /_/ / /_/ /                           "
-echo "/_/ |_/\___/_/|_|\__,_/____/_____/_____/   Pterodactyl Model Panel  "
-echo "                                                                    "
+echo "   _____            __        ____  ____                            "
+echo "  / ___/___  ____  / /_____ _/ __ \/ __ )                           "
+echo "  \__ \/ _ \/ __ \/ __/ __ \`/ / / / __  |                           "
+echo " ___/ /  __/ /_/ / /_/ /_/ / /_/ / /_/ /                            "
+echo "/____/\___/ .___/\__/\__,_/_____/_____/    Production Database Panel"
+echo "         /_/                                                        "
 echo "  Official Automated VPS Installer (Linux / Ubuntu / Debian)        "
 echo "===================================================================="
 echo -e "${NC}"
@@ -53,8 +53,8 @@ echo -e "${BOLD}--- [1/4] Panel Configuration ---${NC}"
 read -p "Enter Panel Domain or IP [Default: ${SERVER_IP}]: " INPUT_DOMAIN
 DOMAIN="${INPUT_DOMAIN:-$SERVER_IP}"
 
-read -p "Enter Panel Brand Name [Default: NexusDB]: " INPUT_BRAND
-PANEL_BRAND="${INPUT_BRAND:-NexusDB}"
+read -p "Enter Panel Brand Name [Default: SeptaDB]: " INPUT_BRAND
+PANEL_BRAND="${INPUT_BRAND:-SeptaDB}"
 
 read -p "Enter Support Email [Default: support@${DOMAIN}]: " INPUT_EMAIL
 SUPPORT_EMAIL="${INPUT_EMAIL:-support@$DOMAIN}"
