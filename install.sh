@@ -79,10 +79,9 @@ done
 
 echo ""
 echo -e "${BOLD}--- [3/4] Database Engine Configuration ---${NC}"
-# Reuse existing password from .env if running re-install, or generate a new random password
-EXISTING_PASS=$(grep -E '^DB_PASSWORD=' "/var/www/nexusdb/server/.env" 2>/dev/null | cut -d'=' -f2- || true)
-DB_PANEL_PASS="${EXISTING_PASS:-$(tr -dc A-Za-z0-9_#@! 2>/dev/null < /dev/urandom | head -c 20 || openssl rand -base64 16)}"
-read -p "Enter Panel MySQL Password [Press Enter to use $([ -n "$EXISTING_PASS" ] && echo "saved" || echo "auto-generated") password]: " INPUT_DB_PASS
+# Generate clean alphanumeric password (avoids '#' which breaks .env parsing)
+DB_PANEL_PASS=$(tr -dc 'A-Za-z0-9' 2>/dev/null < /dev/urandom | head -c 24 || openssl rand -hex 12)
+read -p "Enter Panel MySQL Password [Press Enter to auto-generate]: " INPUT_DB_PASS
 DB_PASSWORD="${INPUT_DB_PASS:-$DB_PANEL_PASS}"
 
 read -p "Enter Public IP/Hostname for Client Databases [Default: ${SERVER_IP}]: " INPUT_DB_HOST
@@ -206,8 +205,11 @@ mysql -e "CREATE USER IF NOT EXISTS 'nexusdb_user'@'localhost' IDENTIFIED BY '${
 mysql -e "ALTER USER 'nexusdb_user'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "CREATE USER IF NOT EXISTS 'nexusdb_user'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "ALTER USER 'nexusdb_user'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';"
+mysql -e "CREATE USER IF NOT EXISTS 'nexusdb_user'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
+mysql -e "ALTER USER 'nexusdb_user'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'nexusdb_user'@'localhost' WITH GRANT OPTION;"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'nexusdb_user'@'127.0.0.1' WITH GRANT OPTION;"
+mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'nexusdb_user'@'%' WITH GRANT OPTION;"
 mysql -e "FLUSH PRIVILEGES;"
 
 # 5. Deploy Project Files
@@ -246,7 +248,7 @@ DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=nexusdb_panel
 DB_USERNAME=nexusdb_user
-DB_PASSWORD=${DB_PASSWORD}
+DB_PASSWORD="${DB_PASSWORD}"
 
 DB_PUBLIC_HOST=${DB_PUBLIC_HOST}
 PHPMYADMIN_PUBLIC_URL=http$( [[ "$ENABLE_SSL" =~ ^[Yy]$ ]] && echo "s" )://${DOMAIN}/phpmyadmin
@@ -270,6 +272,16 @@ composer install --no-dev --optimize-autoloader --no-interaction
 
 print_info "Generating Laravel Application Key..."
 php artisan key:generate --force
+
+# Verify database connection before migrating
+print_info "Verifying database connection..."
+if ! mysql -h 127.0.0.1 -u nexusdb_user -p"${DB_PASSWORD}" -e "USE nexusdb_panel;" >/dev/null 2>&1; then
+    print_warning "Re-synchronizing database user credentials..."
+    mysql -e "ALTER USER 'nexusdb_user'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
+    mysql -e "ALTER USER 'nexusdb_user'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';"
+    mysql -e "ALTER USER 'nexusdb_user'@'%' IDENTIFIED BY '${DB_PASSWORD}';"
+    mysql -e "FLUSH PRIVILEGES;"
+fi
 
 print_info "Running database migrations..."
 php artisan migrate --force
