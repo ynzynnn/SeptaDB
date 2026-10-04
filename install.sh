@@ -79,9 +79,10 @@ done
 
 echo ""
 echo -e "${BOLD}--- [3/4] Database Engine Configuration ---${NC}"
-# Generate random secure passwords for MySQL
-DB_PANEL_PASS=$(tr -dc A-Za-z0-9_#@! 2>/dev/null < /dev/urandom | head -c 20 || openssl rand -base64 16)
-read -p "Enter Panel MySQL Password [Press Enter to auto-generate]: " INPUT_DB_PASS
+# Reuse existing password from .env if running re-install, or generate a new random password
+EXISTING_PASS=$(grep -E '^DB_PASSWORD=' "/var/www/nexusdb/server/.env" 2>/dev/null | cut -d'=' -f2- || true)
+DB_PANEL_PASS="${EXISTING_PASS:-$(tr -dc A-Za-z0-9_#@! 2>/dev/null < /dev/urandom | head -c 20 || openssl rand -base64 16)}"
+read -p "Enter Panel MySQL Password [Press Enter to use $([ -n "$EXISTING_PASS" ] && echo "saved" || echo "auto-generated") password]: " INPUT_DB_PASS
 DB_PASSWORD="${INPUT_DB_PASS:-$DB_PANEL_PASS}"
 
 read -p "Enter Public IP/Hostname for Client Databases [Default: ${SERVER_IP}]: " INPUT_DB_HOST
@@ -202,7 +203,9 @@ systemctl restart mariadb
 print_info "Initializing panel database and root provisioning credentials..."
 mysql -e "CREATE DATABASE IF NOT EXISTS nexusdb_panel CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 mysql -e "CREATE USER IF NOT EXISTS 'nexusdb_user'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
+mysql -e "ALTER USER 'nexusdb_user'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "CREATE USER IF NOT EXISTS 'nexusdb_user'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';"
+mysql -e "ALTER USER 'nexusdb_user'@'127.0.0.1' IDENTIFIED BY '${DB_PASSWORD}';"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'nexusdb_user'@'localhost' WITH GRANT OPTION;"
 mysql -e "GRANT ALL PRIVILEGES ON *.* TO 'nexusdb_user'@'127.0.0.1' WITH GRANT OPTION;"
 mysql -e "FLUSH PRIVILEGES;"
